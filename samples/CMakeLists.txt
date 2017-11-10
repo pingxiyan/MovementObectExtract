@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 2.6)
 
 set(TARGET_NAME samples)
+set(EextracObjLib extract_obj_lib)
 
 project(${TARGET_NAME})
 
@@ -25,3 +26,5 @@ include_directories(./
 
 # Create library file from sources.
 add_executable(${TARGET_NAME} ${MAIN_SRC} ${MAIN_HEADERS})
+
+target_link_libraries(${EextracObjLib})
