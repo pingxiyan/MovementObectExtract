@@ -7,7 +7,10 @@ project(${TARGET_NAME})
 # --- thirdparty lib
 find_package(OpenCV REQUIRED)
 
+# Set exe output directory
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+# Set lib output directory
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 file (GLOB MAIN_SRC
         ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp
@@ -31,5 +34,5 @@ aux_source_directory(./header/private/ HEADERPRIVATE)
 aux_source_directory(./src/ SRC)
 
 # Create library file from sources.
-#add_executable(${TARGET_NAME} ${MAIN_SRC})
-add_library(${TARGET_NAME} ${MAIN_SRC} ${MAIN_HEADERS})
+#add_library(${TARGET_NAME} STATIC ${MAIN_SRC} ${MAIN_HEADERS})
+add_library(${TARGET_NAME} SHARED ${MAIN_SRC} ${MAIN_HEADERS})
