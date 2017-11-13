@@ -7,7 +7,7 @@
 #include <string>
 #include <iostream>
 
-extern "C" __declspec(dllexport) void extractObj(const char* fn)
+extern "C" void extractObj(const char* fn)
 {
 	std::cout << "this is a test function " << std::endl;
 
