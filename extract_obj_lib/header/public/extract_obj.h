@@ -9,8 +9,14 @@
 
 #include <stdint.h>
 
+#ifdef _WIN32
+#define EXPORT_LIB extern "C" __declspec(dllexport)
+#else
+#define EXPORT_LIB extern "C" 
+#endif // _WIN32
 
-extern "C" void extractObj(const char* fn);
+
+EXPORT_LIB void extractObj(const char* fn);
 
 
 #endif /* _MOVEMENT_EXTRACT_OBJ_LIB_H_ */
