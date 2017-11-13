@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 2.6)
 set(TARGET_NAME samples)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
-set(ExtracObjLib ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/extract_obj_lib)
+set(ExtracObjLib extract_obj_lib)
 
 project(${TARGET_NAME})
 
@@ -25,8 +25,11 @@ include_directories(./
 	${OpenCV_INCLUDE_DIRS}
 	)
 
+# Set 3rd library position
+link_directories(${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
 
-# Create library file from sources.
+# Create executable programe
 add_executable(${TARGET_NAME} ${MAIN_SRC} ${MAIN_HEADERS})
 
+# Link 3rd library
 target_link_libraries(${TARGET_NAME} ${ExtracObjLib})
