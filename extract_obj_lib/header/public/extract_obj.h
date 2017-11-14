@@ -7,7 +7,7 @@
 /**
 * @brief Movement object extract algorithm, divide to 2 part;
 * Part 1: Auto calculate parameter and background image;
-* Part 2: Movement ojects extract;
+* Part 2: Movement objects extract;
 */
 
 #ifndef _MOVEMENT_EXTRACT_OBJ_LIB_H_
@@ -38,9 +38,18 @@ typedef struct tagInput
 	uint8_t *pData;	/* image data ptr */
 }Input;
 
+typedef struct tagOutput
+{
+	uint64_t pts;
+}Output;
+
+
+/***************************************************************/
+/*** Part 1: Auto get parameter. *******************************/
+/***************************************************************/
+
 /**
-* @brief Part 1: Auto get paramter.
-* Create Handle of auto get paramter.
+* @brief Create Handle of auto get parameter.
 * @param width : image width.
 * @param height : image height.
 * @return handle, use 'ccAutoParamClose' to release.
@@ -51,20 +60,66 @@ OBJEXT_LIB void* ccAutoParamOpen(int width, int height);
 * @brief Auto get parameter, process one frame.
 * @param pvAPHandle : 'ccAutoParamOpen' create it.
 * @param Input : Input one frame image.
-* @return state, 0=error; 1=contine; 2=over(finish);
+* @return state, 0=error; 1=continue; 2=over(finish);
 */
-OBJEXT_LIB int ccAutoParamProcess(void* pvAPHandle, Input tOneFrame);
+OBJEXT_LIB int ccAutoParamProcess(void* pvAPHandle, const Input* ptOneFrame);
 
+/**
+ * @brief Release handle
+ * @param ppvAPHandle : created by 'ccAutoParamOpen'
+ */
 OBJEXT_LIB void ccAutoParamClose(void** ppvAPHandle);
-// 内部会自动开辟内存，需要使用ccReleaseAutoParam释放
+
+/**
+ * @brief When 'ccAutoParamProcess' return 2, means that auto get parameter finish,
+ * and then, we can get out parameter through 'ccGetAutoParam'
+ */
 OBJEXT_LIB void* ccGetAutoParam(void* pvAPHandle);
+
+/**
+ * @brief Release handle(returned by ccGetAutoParam), must be after 'ccObjExtractOpen"
+ */
 OBJEXT_LIB void ccReleaseAutoParam(void** ppvAParam);
 
 
-OBJEXT_LIB void* ccObjExtractOpen(int imgW, int imgH, void* pvAParam/*自动获取的参数*/);
-OBJEXT_LIB int ccObjExtractProcess(void* pvHandle, TNewVF *ptIn, TObjExtractOut *ptOut);
-OBJEXT_LIB int ccObjExtractGetRemain(void* pvHandle, TObjExtractOut *ptOut);
+/***************************************************************/
+/*** Part 2: Movement objects extract **************************/
+/***************************************************************/
+
+/**
+ * @brief Create object extract handle.
+ * @param width, height : same to 'width height of ccAutoParamOpen'
+ * @param pvAParam : parameter, be created by 'ccGetAutoParam',
+ * and you can release after "ccObjExtractOpen".
+ * @return void* : handle, ccObjExtractClose to release.
+ */
+OBJEXT_LIB void* ccObjExtractOpen(int width, int height, void* pvAParam);
+
+/**
+ * @brief Process one frame.
+ * @param pvHandle : created by 'ccObjExtractOpen'
+ * @param ptIn : one frame image information.
+ * @param ptOut : report result.
+ * @return int : 0=;1=;2=;
+ */
+OBJEXT_LIB int ccObjExtractProcess(void* pvHandle, const Input *ptIn, Output *ptOut);
+
+/**
+ * @brief Process one frame.
+ * @param pvHandle : created by 'ccObjExtractOpen'
+ * @param ptOut : Get last remaining report result after processing all frames.
+ * @return int : 0=;1=;
+ */
+OBJEXT_LIB int ccObjExtractGetRemain(void* pvHandle, Output *ptOut);
+
+/**
+ * @brief Release handle and all middle buffers.
+ * @param ppvHandle : created by 'ccObjExtractOpen'
+ */
 OBJEXT_LIB void ccObjExtractClose(void** ppvHandle);
 
+/**
+ * samples
+ */
 
 #endif /* _MOVEMENT_EXTRACT_OBJ_LIB_H_ */
