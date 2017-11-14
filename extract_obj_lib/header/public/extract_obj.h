@@ -14,6 +14,7 @@
 #define _MOVEMENT_EXTRACT_OBJ_LIB_H_
 
 #include <stdint.h>
+#include <extract_obj_config.h>
 
 #ifdef _WIN32
 #define OBJEXT_LIB extern "C" __declspec(dllexport)
@@ -38,9 +39,29 @@ typedef struct tagInput
 	uint8_t *pData;	/* image data ptr */
 }Input;
 
+typedef struct tagDetObj
+{
+	int objId;		// object index
+	RoiRect roiRt;	// roi in src image.
+}DetObj;
+
+typedef struct tagRptObj
+{
+	uint pts;	// time stamp
+	int objId;	// object index
+	uint8_t* pBGR24;	/* Object roi image, width,height=roiRt.w,roiRt.h, 
+						Do not release 'pBGR24'.*/
+	RoiRect roiRt;		// roi in src image.
+}TRptObj;
+
 typedef struct tagOutput
 {
-	uint64_t pts;
+	uint64_t pts;		//  time stamp
+	DetObj *pDetObj;	// Detect objects(the result of current image)
+	int detObjNum;
+
+	TRptObj *pRptObj;	// Report objects
+	int rptObjNum;	
 }Output;
 
 
@@ -52,9 +73,11 @@ typedef struct tagOutput
 * @brief Create Handle of auto get parameter.
 * @param width : image width.
 * @param height : image height.
+* @param maxframenum : max frame number is used for initial parameter.
+* default 300, recommend 300~600.
 * @return handle, use 'ccAutoParamClose' to release.
 */
-OBJEXT_LIB void* ccAutoParamOpen(int width, int height);
+OBJEXT_LIB void* ccAutoParamOpen(int width, int height, int maxframenum);
 
 /**
 * @brief Auto get parameter, process one frame.

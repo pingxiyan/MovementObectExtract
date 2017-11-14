@@ -1,14 +1,54 @@
 /**
-*
+* Part 2: Movement objects extract
+* Sandy Yann, Nov 14, 2017
 */
-
-#include "extract_obj.h"
 
 #include <string>
 #include <iostream>
 
-void extractObj(const char* fn)
-{
-	std::cout << "this is a test function " << std::endl;
+#include "extract_obj.h"
 
+
+/**
+* @brief Create object extract handle.
+* @param width, height : same to 'width height of ccAutoParamOpen'
+* @param pvAParam : parameter, be created by 'ccGetAutoParam',
+* and you can release after "ccObjExtractOpen".
+* @return void* : handle, ccObjExtractClose to release.
+*/
+OBJEXT_LIB void* ccObjExtractOpen(int width, int height, void* pvAParam)
+{
+	return NULL;
+}
+
+/**
+* @brief Process one frame.
+* @param pvHandle : created by 'ccObjExtractOpen'
+* @param ptIn : one frame image information.
+* @param ptOut : report result.
+* @return int : 0=;1=;2=;
+*/
+OBJEXT_LIB int ccObjExtractProcess(void* pvHandle, const Input *ptIn, Output *ptOut)
+{
+	return 0;
+}
+
+/**
+* @brief Process one frame.
+* @param pvHandle : created by 'ccObjExtractOpen'
+* @param ptOut : Get last remaining report result after processing all frames.
+* @return int : 0=;1=;
+*/
+OBJEXT_LIB int ccObjExtractGetRemain(void* pvHandle, Output *ptOut)
+{
+	return 0;
+}
+
+/**
+* @brief Release handle and all middle buffers.
+* @param ppvHandle : created by 'ccObjExtractOpen'
+*/
+OBJEXT_LIB void ccObjExtractClose(void** ppvHandle)
+{
+	
 }
