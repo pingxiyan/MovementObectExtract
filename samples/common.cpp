@@ -58,3 +58,8 @@ void bgr24_to_yuv(uint8_t *pYUV, uint8_t *pBGR24, int width, int height, int ste
 		}
 	}
 }
+
+cv::Rect RoiRect2Rect(RoiRect rt)
+{
+	return cv::Rect(rt.x, rt.y, rt.w, rt.h);
+}

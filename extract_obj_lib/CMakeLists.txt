@@ -36,3 +36,5 @@ aux_source_directory(./src/ SRC)
 # Create library file from sources.
 #add_library(${TARGET_NAME} STATIC ${MAIN_SRC} ${MAIN_HEADERS})
 add_library(${TARGET_NAME} SHARED ${MAIN_SRC} ${MAIN_HEADERS})
+
+target_link_libraries(${TARGET_NAME} ${OpenCV_LIBS})

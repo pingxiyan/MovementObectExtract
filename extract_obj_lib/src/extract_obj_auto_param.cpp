@@ -7,6 +7,7 @@
 #include <iostream>
 
 #include "extract_obj.h"
+#include "extract_obj_auto_param.h"
 
 /**
 * @brief Create Handle of auto get parameter.
@@ -18,6 +19,11 @@
 */
 OBJEXT_LIB void* ccAutoParamOpen(int width, int height, int maxframenum)
 {
+	CAutoParam* pAutoParam = new CAutoParam();
+	if (NULL == pAutoParam) {
+		return NULL;
+	}
+
 	return NULL;
 }
 

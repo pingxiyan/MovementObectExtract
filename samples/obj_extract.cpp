@@ -10,6 +10,15 @@
 
 #include <opencv2/opencv.hpp>
 
+static char *psrcfn = NULL;
+static char *pdstfn = NULL;
+static char *svfolder = NULL;
+
+#include <iostream>
+#include <fstream>
+#include <cstdlib>
+#include <experimental/filesystem>
+
 /**
 * @brief Auto get parameter sample
 * @param psrcfn : vedio file name.
@@ -82,31 +91,46 @@ void* ExtractObjTestGetAutoParam(const char *psrcfn)
 	return NULL;
 }
 
-void realtime_show_detect_result(cv::Mat img, const Output& output);
+void realtime_show_detect_result(cv::Mat& img, const Output& output)
 {
-	for (int i = 0; i < output.tDetObj.num; i++)
+	for (int i = 0; i < output.detObjNum; i++)
 	{
-		cv::Rect rt = cv::Rect(output.tDetObj.atRtRoi[i].x,
-			output.tDetObj.atRtRoi[i].y,
-			output.tDetObj.atRtRoi[i].w,
-			output.tDetObj.atRtRoi[i].h);
-		cv::rectangle(rsz, rt, cv::Scalar(255, 0, 0), 1);
+		cv::Rect rt = RoiRect2Rect(output.pDetObj[i].roiRt);
+		cv::rectangle(img, rt, cv::Scalar(255, 0, 0), 1);
 	}
-	cv::imshow("detect", rsz);
+	cv::imshow("detect", img);
 	cv::waitKey(1);
 }
 
 void show_report_result(const Output& output)
 {
-	for (int i = 0; i < output.num; i++)
+	for (int i = 0; i < output.rptObjNum; i++)
 	{
 		printf("report obj pts = %I64d, obj_id = %I64d \n",
-			output.aRptObj[i].pts, output.aRptObj[i].u64ObjID);
+			output.pRptObj[i].pts, output.pRptObj[i].objId);
 
-		cv::Mat rptImg = cv::Mat(output.aRptObj[i].tRoiRt.h, output.aRptObj[i].tRoiRt.w, CV_8UC3, output.aRptObj[i].pBGR24);
+		cv::Mat rptImg = cv::Mat(output.pRptObj[i].roiRt.h, output.pRptObj[i].roiRt.w, CV_8UC3, output.pRptObj[i].pBGR24);
 		//cv::rectangle(rptImg, rt, cv::Scalar(255, 0, 0), 1);
 		cv::imshow("rpt", rptImg);
 		cv::waitKey(0);
+	}
+}
+
+void saveRptResult(const Output& output)
+{
+	static char g_asvpath[256] = { 0 };
+	if (g_asvpath[0] == 0) {
+		std::experimental::filesystem::create_directories("report_result");
+		sprintf(g_asvpath, ".\\report_result\\%s", svfolder);
+		std::experimental::filesystem::create_directories(g_asvpath);
+	}
+
+	for (int i = 0; i < output.rptObjNum; i++) {
+		char savename[256] = { 0 };
+		sprintf(savename, "%s\\%I64d.jpg", g_asvpath, output.pRptObj[i].objId);
+
+		cv::Mat rptImg = cv::Mat(output.pRptObj[i].roiRt.h, output.pRptObj[i].roiRt.w, CV_8UC3, output.pRptObj[i].pBGR24);
+		cv::imwrite(savename, rptImg);
 	}
 }
 
@@ -164,7 +188,7 @@ int ExtractObjTest(const char *psrcfn, const char *pdstfn, void *pvAParam/* para
 		show_report_result(output);
 #endif
 
-#if 1	// 保存上报结果
+#if 0	// 保存上报结果
 		saveRptResult(output);
 #endif
 		printf("\rprocess idx = %d         ", pts / 40);
@@ -174,7 +198,7 @@ int ExtractObjTest(const char *psrcfn, const char *pdstfn, void *pvAParam/* para
 		}
 	}
 
-	TObjExtractOut output = { 0 };
+	Output output = { 0 };
 	ccObjExtractGetRemain(pvHandle, &output);
 #if 1	// 保存上报结果
 	saveRptResult(output);
@@ -188,7 +212,6 @@ int ExtractObjTest(const char *psrcfn, const char *pdstfn, void *pvAParam/* para
 
 int main(int argc, char** argv)
 {
-	const char *psrcfn, *pdstfn, *svfolder;
 	if (argc != 4)
 	{
 		printf("param argv[1] = src video fn\nargv[2] = dst video fn\n");
@@ -208,7 +231,7 @@ int main(int argc, char** argv)
 	// or manual set parameter.
 
 	// Start analysis. pvAParam will be released in 'ExtractObjTest'
-	ExtractObjTest(psrcfn, pdstfn, pvAParam);
+	//ExtractObjTest(psrcfn, pdstfn, pvAParam);
 
 	return 1;
 }

@@ -32,4 +32,4 @@ link_directories(${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
 add_executable(${TARGET_NAME} ${MAIN_SRC} ${MAIN_HEADERS})
 
 # Link 3rd library
-target_link_libraries(${TARGET_NAME} ${ExtracObjLib})
+target_link_libraries(${TARGET_NAME} ${OpenCV_LIBS} ${ExtracObjLib})

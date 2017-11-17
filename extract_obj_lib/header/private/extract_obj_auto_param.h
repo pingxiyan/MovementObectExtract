@@ -13,6 +13,7 @@ public:
 	~CAutoParam() { };
 
 private:
+	/* config parameter, use define or CAutoParam generate */
 	ExtractObjConfig _configParam;
 
 	bool _bIsValid;	//与扫描信息是否有效

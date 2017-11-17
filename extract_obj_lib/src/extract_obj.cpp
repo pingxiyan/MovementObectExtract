@@ -7,7 +7,12 @@
 #include <iostream>
 
 #include "extract_obj.h"
+#include "extract_obj_log.h"
 
+/**
+* @brief Initialize log model
+*/
+const bool bInitLog = InitialLog("extract_obj_lib", false, false, false);
 
 /**
 * @brief Create object extract handle.
@@ -22,13 +27,14 @@ OBJEXT_LIB void* ccObjExtractOpen(int width, int height, void* pvAParam)
 }
 
 /**
-* @brief Process one frame.
+* @brief Process one frame. Inside we only process yuv420 image, so we
+* convert input to yuv420 firtly.
 * @param pvHandle : created by 'ccObjExtractOpen'
 * @param ptIn : one frame image information.
 * @param ptOut : report result.
 * @return int : 0=;1=;2=;
 */
-OBJEXT_LIB int ccObjExtractProcess(void* pvHandle, const Input *ptIn, Output *ptOut)
+OBJEXT_LIB int ccObjExtractProcess(void* pvHandle, const Input *pIn, Output *pOut)
 {
 	return 0;
 }

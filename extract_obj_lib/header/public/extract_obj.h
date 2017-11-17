@@ -47,8 +47,8 @@ typedef struct tagDetObj
 
 typedef struct tagRptObj
 {
-	uint pts;	// time stamp
-	int objId;	// object index
+	uint64_t pts;	// time stamp
+	int objId;		// object index
 	uint8_t* pBGR24;	/* Object roi image, width,height=roiRt.w,roiRt.h, 
 						Do not release 'pBGR24'.*/
 	RoiRect roiRt;		// roi in src image.
@@ -125,7 +125,7 @@ OBJEXT_LIB void* ccObjExtractOpen(int width, int height, void* pvAParam);
  * @param ptOut : report result.
  * @return int : 0=;1=;2=;
  */
-OBJEXT_LIB int ccObjExtractProcess(void* pvHandle, const Input *ptIn, Output *ptOut);
+OBJEXT_LIB int ccObjExtractProcess(void* pvHandle, const Input *pIn, Output *pOut);
 
 /**
  * @brief Process one frame.
