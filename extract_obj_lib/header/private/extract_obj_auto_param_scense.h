@@ -25,9 +25,14 @@ public:
 
 private:
 	int _frmNum = 0;	// receives frames number
-	int _frmNumProcessed = 0;	// had processed frames number
-	int _frmNumNoise = 0;		// In all estimate frames, is color frames numbers. <=_frmNum;
+	bool _bFinished = false;
 
+	int _procWidth = 0;
+	int _procHeight = 0;
+	cv::Mat _procY;
+	cv::Mat _procU;
+	cv::Mat _procV;
+	void resize2procYUV(uint8_t* pYuv, int width, int height);
 };
 
 
